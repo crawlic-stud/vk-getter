@@ -50,7 +50,7 @@ class VKGetter:
         :param bool include_ads: include posts with ads or not.
         :param bool include_copyright: include posts with copyright or not.
         :param bool allow_no_attachments: include posts with no attachments or not.
-        :param bool as_dict: return posts as dict or as dataclass object.
+        :param bool as_dict: return posts as dict or as a dataclass object.
         """
 
         # you can also put a url
