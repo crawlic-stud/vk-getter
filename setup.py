@@ -9,7 +9,7 @@ setup(
     name="vk_getter",
     version=VERSION,
     author="Crawlic (Nikita Kuznetsov)",
-    author_email="<nikitosik0726@gmail,com>",
+    author_email="nikitosik0726@gmail.com",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
@@ -17,7 +17,7 @@ setup(
     install_requires=['requests'],
     keywords=['python', 'vk', 'api', 'data', 'image', 'posts', 'vk get'],
     classifiers=[
-        "Development Status :: 1 - First Alpha",
+        "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
