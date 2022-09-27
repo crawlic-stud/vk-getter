@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 DESCRIPTION = 'Getting data from vk.com pythonic and easily.'
 LONG_DESCRIPTION = 'A package that allows to get data from groups in vk.com in just few lines of code.'
 

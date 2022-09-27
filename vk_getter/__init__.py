@@ -1,1 +1,1 @@
-from getter import VKGetter
+from .getter import VKGetter

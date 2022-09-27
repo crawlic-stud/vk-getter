@@ -2,8 +2,8 @@ from datetime import datetime
 import json
 import os
 
-from models import Post, Attachments
-import utils
+from .models import Post, Attachments
+from . import utils
 
 
 class VKGetter:

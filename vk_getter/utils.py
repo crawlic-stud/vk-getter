@@ -5,7 +5,7 @@ import json
 from dataclasses import asdict
 import shutil
 
-from errors import *
+from .errors import *
 
 
 def get_api(url):
