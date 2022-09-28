@@ -7,4 +7,4 @@ fi
     
 rm -r dist
 python setup.py sdist
-twine upload dist/*
+twine upload dist/* -u __token__
