@@ -45,3 +45,11 @@ def download_from_url(url, folder, filename):
         filename = f"{filename}.{extension}"
         with open(os.path.join(folder, filename), 'wb') as f:
             shutil.copyfileobj(req.raw, f)
+
+
+def download_attachments(posts, path):
+    for i, post in enumerate(posts):
+        [download_from_url(photo, f"./{path}/photos", f"photo-{i}-{j}") for j, photo in enumerate(post.attachments.photo)]
+        [download_from_url(video, f"./{path}/videos", f"video-{i}-{j}") for j, video in enumerate(post.attachments.video)]
+        [download_from_url(audio, f"./{path}/audios", f"audio-{i}-{j}") for j, audio in enumerate(post.attachments.audio)]
+        [download_from_url(other, f"./{path}/others", f"other-{i}-{j}") for j, other in enumerate(post.attachments.other)]

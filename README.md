@@ -10,15 +10,22 @@ Install package via pip
 pip install vk_getter
 ```
 
-Extract latest posts from any vk group domain
+Firstly, you need to get your access token. You can get it [here](https://vkhost.github.io/).
 
+Just paste your token into a getter and you good to go!
 ```python
 from vk_getter import VKGetter
 
-getter = VKGetter("YOUR TOKEN")
-group_domain = "vk" # same as https://www.vk.com/vk
+getter = VKGetter("TOKEN")
 
-posts = getter.get_latest_posts(group_domain=group_domain
+# get 100 posts from https://www.vk.com/vk
+posts = getter.get_latest_posts("vk", 100) 
+```
+
+You can specify different settings:
+
+```python
+posts = getter.get_latest_posts(group_domain="https://www.vk.com/vk"
                                 count=1,
                                 include_pinned=False,
                                 allow_no_attachments=False,
@@ -26,12 +33,9 @@ posts = getter.get_latest_posts(group_domain=group_domain
                                 include_copyright=False)
 ```
 
-Retrieved posts are retrieved as Python dataclass, but can also be returned as dictionary.
+All posts are retrieved as Python dataclasses, but can also be returned as dictionaries.
 
 ```python
-from vk_getter import VKGetter
-
-getter = VKGetter("YOUR TOKEN")
 posts = getter.get_latest_posts(group_domain="vk",
                                 count=1,
                                 as_dict=True)
@@ -60,12 +64,11 @@ posts = getter.get_latest_posts(group_domain="vk",
 Also, you can download all the gathered attachments to your local system.
 
 ```python
-from vk_getter import VKGetter
+from vk_getter.utils import download_attachments
 
-getter = VKGetter("YOUR TOKEN")
-posts = getter.get_latest_posts(group_domain="lol",
-                                count=100)
-
-getter.download_attachments(posts, path="some_folder")
+posts = getter.get_latest_posts("lol", 15)
+getter.download_attachments(posts, path="images")
 ```
 `*Note:` do NOT use `as_dict` in this method.
+
+***

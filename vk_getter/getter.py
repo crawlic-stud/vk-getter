@@ -113,15 +113,5 @@ class VKGetter:
             fresh_posts = utils.get_posts_as_dict(fresh_posts)
         return fresh_posts
 
-    def download_attachments(self, posts, path):
-        print("Started collecting photos.")
-        for i, post in enumerate(posts):
-            photos = post.attachments.photo
-            videos = post.attachments.video
-            audios = post.attachments.audio
-            others = post.attachments.other
 
-            [utils.download_from_url(photo, f"./{path}/photos", f"photo-{i}-{j}") for j, photo in enumerate(photos)]
-            [utils.download_from_url(video, f"./{path}/videos", f"video-{i}-{j}") for j, video in enumerate(videos)]
-            [utils.download_from_url(audio, f"./{path}/audios", f"audio-{i}-{j}") for j, audio in enumerate(audios)]
-            [utils.download_from_url(other, f"./{path}/others", f"other-{i}-{j}") for j, other in enumerate(others)]
+
