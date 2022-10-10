@@ -1,7 +1,8 @@
-dev-test.py
+devtest.py
 venv
 __pycache__
 vk_getter.egg-info
 dist
 build
 .pytest_cache
+tfolder
