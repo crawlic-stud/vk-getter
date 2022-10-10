@@ -1,6 +1,6 @@
 # VK Getter
 
-Very simple and pythonic way to extract data from https://www.vk.com
+Very simple and pythonic way to extract data from [VK](https://vk.com).
 
 ## Getting started
 
@@ -10,30 +10,33 @@ Install package via pip
 pip install vk_getter
 ```
 
-Firstly, you need to get your access token. You can get it [here](https://vkhost.github.io/).
+Use your access token, and get posts from any public group. You can get token [here](https://vkhost.github.io/).
 
-Just paste your token into a getter and you good to go!
 ```python
 from vk_getter import VKGetter
 
 getter = VKGetter("TOKEN")
 
-# get 100 posts from https://www.vk.com/vk
-posts = getter.get_latest_posts("vk", 100) 
+# get 200 latest posts from https://www.vk.com/vk
+posts = getter.get_posts("vk", 200) 
+
+# get 150 posts with offset of 50
+posts = getter.get_posts("lol", 150, 50)
 ```
 
 You can specify different settings:
 
 ```python
-posts = getter.get_latest_posts(group_domain="https://www.vk.com/vk"
-                                count=1,
-                                include_pinned=False,
+posts = getter.get_latest_posts("https://www.vk.com/vk",
+                                count=120,
+				offset=20,
+                                pinned=False,
                                 allow_no_attachments=False,
-                                include_ads=False,
-                                include_copyright=False)
+                                ads=False,
+                                copyright=False)
 ```
 
-All posts are retrieved as Python dataclasses, but can also be returned as dictionaries.
+All posts are retrieved as a Python dataclasses, but can also be returned as dicts.
 
 ```python
 posts = getter.get_latest_posts(group_domain="vk",
@@ -61,14 +64,47 @@ posts = getter.get_latest_posts(group_domain="vk",
 
 ```
 
-Also, you can download all the gathered attachments to your local system.
+## Attachments
+
+You can download gathered attachments to your local system.
 
 ```python
-from vk_getter.utils import download_attachments
+from vk_getter import VKGetter
+from vk_getter.utils import download, download_all
 
-posts = getter.get_latest_posts("lol", 15)
-getter.download_attachments(posts, path="images")
+getter = VKGetter("TOKEN")
+posts = getter.get_posts("lol", 150)
+
+# download all of the 4 types
+path = "lol"
+download_all(posts, path)
+
+# or specify one
+download(posts, "photo", path)
+download(posts, "video", path)
+download(posts, "audio", path)
+download(posts, "other", path)
 ```
-`*Note:` do NOT use `as_dict` in this method.
 
-***
+Or you can extract them as links.
+
+```python
+from vk_getter import VKGetter
+from vk_getter.utils import extract, extract_all
+
+getter = VKGetter("TOKEN")
+posts = getter.get_posts("lol", 150)
+
+# extract all of the 4 types
+photos, videos, audios, others = extract_all(posts)
+
+# or specify one
+photos = extract(posts, "photo")
+videos = extract(posts, "video")
+audios = extract(posts, "audio")
+others = extract(posts, "other")
+```
+
+`*Note:` do NOT use `as_dict` in the get_posts method.
+
+---
