@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import os
+from urllib import request
 
 from .models import Post, Attachments
 from . import utils
@@ -20,7 +21,6 @@ class VKGetter:
         video_id = attachment["video"]["id"]
         video_url = f"https://api.vk.com/method/video.get?videos={owner_id}_{video_id}" \
                     f"&access_token={self.token}&v={self.api_version}"
-
         req = utils.get_api(video_url)
         src = req.json()
         files = src["response"]["items"][0]["files"]
@@ -36,6 +36,17 @@ class VKGetter:
         group_id = req.json()["response"][0]["id"]
         return group_id
 
+    def get_raw(self, group_domain, count):
+        # you can also put a url
+        group_domain = group_domain.replace("https://", "").replace("vk.com/", "")
+
+        url = f"https://api.vk.com/method/wall.get?owner_id=-{self._get_group_id(group_domain)}" \
+              f"&count={count}&access_token={self.token}&v={self.api_version}"
+        req = utils.get_api(url)
+        src = req.json()
+        return src
+
+
     def get_latest_posts(self, group_domain, count=50,
                          include_pinned=False, include_ads=False, include_copyright=False, allow_no_attachments=False,
                          as_dict=False):
@@ -50,13 +61,7 @@ class VKGetter:
         :param bool as_dict: return posts as dict or as a dataclass object.
         """
 
-        # you can also put a url
-        group_domain = group_domain.replace("https://", "").replace("vk.com/", "")
-
-        url = f"https://api.vk.com/method/wall.get?owner_id=-{self._get_group_id(group_domain)}" \
-              f"&count={count}&access_token={self.token}&v={self.api_version}"
-        req = utils.get_api(url)
-        src = req.json()
+        src = self.get_raw(group_domain, count)
 
         fresh_posts = []
         posts = src["response"]["items"]
