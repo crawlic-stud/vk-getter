@@ -1,10 +1,14 @@
 from datetime import datetime
-import math
+import os
+import shutil
 
 import requests
 
 from .models import Post, Attachments
 from . import utils
+
+
+COUNT_LIMIT = 100
 
 
 class VKGetter:
@@ -50,10 +54,10 @@ class VKGetter:
         group_id = self._get_group_id(group_domain)
 
         posts = []
-        for _ in range(count // 100):
+        for _ in range(count // COUNT_LIMIT):
             next_posts = self._get_wall_with_offset(group_id, count, offset)
             posts += next_posts["response"]["items"]
-            offset += 100
+            offset += COUNT_LIMIT
 
         left_over = count - offset
         if left_over:
@@ -99,7 +103,8 @@ class VKGetter:
                 for attachment in attachments:
                     try:
                         if attachment["type"] == "photo":
-                            photo_attachments.append(attachment["photo"]["sizes"][4]["url"])
+                            max_size = max(attachment["photo"]["sizes"], key=lambda x: x["width"] * x["height"])
+                            photo_attachments.append(max_size["url"])
                         elif attachment["type"] == "video":
                             video_attachments.append(self._get_video(attachment))
                         elif attachment["type"] == "audio":
@@ -132,3 +137,49 @@ class VKGetter:
         if as_dict:
             fresh_posts = utils.get_posts_as_dict(fresh_posts)
         return fresh_posts
+
+    def download_from_url(self, url: str, folder: str, filename: str) -> bytearray | None:
+        """Downloads file from url to a specified folder, returns file's binary data."""
+        return utils.download_from_url(url, folder, filename, self.session)
+
+    def download_all(self, posts: list[Post], path: str) -> None:
+        """Downloads all attachments for list of posts into path specified."""
+        for i, post in enumerate(posts):
+            [self.download_from_url(photo, f"./{path}/photo", f"photo{i}{j}") for j, photo in enumerate(post.attachments.photo)]
+            [self.download_from_url(video, f"./{path}/video", f"video{i}{j}") for j, video in enumerate(post.attachments.video)]
+            [self.download_from_url(audio, f"./{path}/audio", f"audio{i}{j}") for j, audio in enumerate(post.attachments.audio)]
+            [self.download_from_url(other, f"./{path}/other", f"other{i}{j}") for j, other in enumerate(post.attachments.other)]
+
+    @staticmethod
+    def _assert_query(query):
+        if query not in ["photo", "video", "audio", "other"]:
+            raise TypeError("Query must be one of the following: photo, video, audio, other.")
+
+    def download(self, posts: list[Post], query: str, path: str) -> None:
+        """Downloads attachments of specified type (photo, video, audio, other)."""
+        self._assert_query(query)
+        for i, post in enumerate(posts):
+            [self.download_from_url(attach, f"./{path}/{query}", f"{query}{i}{j}") 
+                for j, attach in enumerate(getattr(post.attachments, query))]
+        
+    @staticmethod
+    def extract_all(posts: list[Post]) -> Attachments:
+        """Extracts all attachments of given posts into one attachments object"""
+        photos = []
+        videos = []
+        audios = []
+        others = []
+        for post in posts:
+            photos += post.attachments.photo
+            videos += post.attachments.video
+            audios += post.attachments.audio
+            others += post.attachments.other
+        return Attachments(photos, videos, audios, others)
+
+    def extract(self, posts, query):
+        """Extracts attachments of specified type (photo, video, audio, other)."""
+        self._assert_query(query)
+        attachments = []
+        for post in posts:
+            attachments += getattr(post.attachments, query)
+        return attachments

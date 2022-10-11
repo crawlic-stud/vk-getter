@@ -1,4 +1,5 @@
-pytest tests.py
+bash test.sh
+
 read -p "press q to exit, ENTER to continue: " r
 if [ $r == "q" ] 
 then

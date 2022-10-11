@@ -70,39 +70,38 @@ You can download gathered attachments to your local system.
 
 ```python
 from vk_getter import VKGetter
-from vk_getter.utils import download, download_all
 
 getter = VKGetter("TOKEN")
 posts = getter.get_posts("lol", 150)
 
 # download all of the 4 types
 path = "lol"
-download_all(posts, path)
+getter.download_all(posts, path)
 
 # or specify one
-download(posts, "photo", path)
-download(posts, "video", path)
-download(posts, "audio", path)
-download(posts, "other", path)
+getter.download(posts, "photo", path)
+getter.download(posts, "video", path)
+getter.download(posts, "audio", path)
+getter.download(posts, "other", path)
 ```
 
 Or you can extract them as links.
 
 ```python
 from vk_getter import VKGetter
-from vk_getter.utils import extract, extract_all
 
 getter = VKGetter("TOKEN")
 posts = getter.get_posts("lol", 150)
 
 # extract all of the 4 types
-photos, videos, audios, others = extract_all(posts)
+# returns a dataclass Attachments object with 4 fields
+attachments = getter.extract_all(posts)
 
 # or specify one
-photos = extract(posts, "photo")
-videos = extract(posts, "video")
-audios = extract(posts, "audio")
-others = extract(posts, "other")
+photos = getter.extract(posts, "photo")
+videos = getter.extract(posts, "video")
+audios = getter.extract(posts, "audio")
+others = getter.extract(posts, "other")
 ```
 
 `*Note:` do NOT use `as_dict` in the get_posts method.
