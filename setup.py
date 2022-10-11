@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from pathlib import Path
 
-VERSION = '0.0.5'
+VERSION = '0.0.6'
 DESCRIPTION = 'Getting data from vk.com in a pythonic way.'
 LONG_DESCRIPTION = 'A package that allows to get data from groups in vk.com in just few lines of code.'
 
