@@ -38,5 +38,5 @@ def download_from_url(url: str, folder: str, filename: str, session: None | requ
             os.makedirs(folder)
         filename = f"{filename}.{extension}"
         with open(os.path.join(folder, filename), 'wb') as f:
-            shutil.copyfileobj(req.raw, f)
-    return req.raw
+            f.write(req.content)
+    return req.content
